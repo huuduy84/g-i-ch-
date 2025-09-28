@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Xin lỗi chị Thảo 💌</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body, html {
+      margin:0; padding:0; font-family: "Segoe UI", sans-serif;
+      background:#fff0f6; overflow-x:hidden;
+    }
+    .screen {display:none; text-align:center; padding:20px;}
+    .active {display:block;}
+    h1 {color:#e91e63;}
+    .btn {
+      display:inline-block; margin:10px; padding:10px 20px;
+      background:#e91e63; color:#fff; border:none; border-radius:8px;
+      cursor:pointer; font-size:16px; transition:0.3s;
+    }
+    .btn:hover {transform:scale(1.1);}
+    .heart {
+      position:absolute; color:#e91e63; font-size:20px; animation:fly 4s linear infinite;
+    }
+    @keyframes fly {
+      0% {transform:translateY(0) scale(1); opacity:1;}
+      100% {transform:translateY(-600px) scale(0.5); opacity:0;}
+    }
+    .hidden {display:none;}
+    .gift-grid {display:grid; grid-template-columns:1fr 1fr; gap:20px; justify-items:center;}
+    .gift {
+      width:120px; height:120px; background:#ff80ab; border-radius:10px;
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-size:40px; cursor:pointer; position:relative;
+    }
+    .gift.opened {background:#fff0f6; color:#333; font-size:16px; padding:10px;}
+    .confetti {position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none;}
+    .floating-heart {
+      position:fixed; font-size:24px; color:#e91e63;
+      animation:floatUp 3s linear forwards;
+    }
+    @keyframes floatUp {
+      from {transform:translateY(0); opacity:1;}
+      to {transform:translateY(-200px); opacity:0;}
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nhạc nền -->
+<audio id="bgmusic" src="bgmusic.mp3" loop></audio>
+<button onclick="toggleMusic()" style="position:fixed;top:10px;right:10px;z-index:999" class="btn">🎵</button>
+
+<!-- Trang 1: Tim bay -->
+<div id="screen1" class="screen active">
+  <h1>💖 Gửi chị Thảo 🐰</h1>
+  <p>Trái tim này dành cho chị...</p>
+  <button class="btn" onclick="nextScreen(2)">Bấm để sang trang tiếp theo</button>
+</div>
+
+<!-- Trang 2: Mật khẩu -->
+<div id="screen2" class="screen">
+  <h1>🔑 Nhập mật khẩu</h1>
+  <input id="password" type="password" placeholder="Mật khẩu" />
+  <button class="btn" onclick="checkPass()">Xác nhận</button>
+  <p id="msg"></p>
+</div>
+
+<!-- Trang 3: Thư -->
+<div id="screen3" class="screen">
+  <h1>💌 Thư gửi chị Thảo (Thỏ 🐰)</h1>
+  <div id="letter">
+    <p>Haizz em lại làm chị giận nữa òi 😞 ...</p>
+    <p>Em biết mình tồi tệ nhưng em thật sự hối lỗi, mong chị tha thứ...</p>
+  </div>
+  <button class="btn" onclick="stay()">Tiếp tục ở lại</button>
+  <button class="btn" onclick="leave()">Rời đi</button>
+  <div id="letterMore" class="hidden">
+    <p>Vậy ra chị chọn vẫn sẽ ở lại à 😊 ...</p>
+    <button class="btn" onclick="nextScreen(4)">Tiếp theo</button>
+  </div>
+  <div id="letterLeave" class="hidden">
+    <p>Ra lựa chọn của chị là rời đi à ☺️... Pai paiii 🌷</p>
+  </div>
+</div>
+
+<!-- Trang 4: Giận/Tha thứ -->
+<div id="screen4" class="screen">
+  <h1>Chị có còn giận em hong? 🥺</h1>
+  <button id="angryBtn" class="btn" onclick="angryMove()">Giận mãi mãi 😡</button>
+  <button id="forgiveBtn" class="btn" onclick="goForgive()">Tha thứ 💖</button>
+</div>
+
+<!-- Trang 5: Quà -->
+<div id="screen5" class="screen">
+  <h1>🎁 Món quà dành cho chị</h1>
+  <div class="gift-grid">
+    <div class="gift" data-content="🌸 Một bó hoa thật đẹp">🎁</div>
+    <div class="gift" data-content="🧸 Một con gấu bông thật dễ thương">🎁</div>
+    <div class="gift" data-content="🍲 Đi ăn thật ngonn">🎁</div>
+    <div class="gift" data-content="🎡 Đi chơiiii">🎁</div>
+  </div>
+  <p id="chooseMsg" class="hidden">✨ Giờ hãy chọn một phần quà chính thức nha ✨</p>
+</div>
+
+<canvas id="confetti" class="confetti"></canvas>
+
+<script>
+let current=1;
+function nextScreen(n){
+  document.getElementById("screen"+current).classList.remove("active");
+  document.getElementById("screen"+n).classList.add("active");
+  current=n;
+}
+function checkPass(){
+  let val=document.getElementById("password").value;
+  let msg=document.getElementById("msg");
+  if(val==="0411"){ nextScreen(3);}
+  else if(msg.innerText===""){msg.innerText="Sai òi nhập lại đi";}
+  else{msg.innerText="Cố lên sắp đúng rồi";}
+}
+function stay(){
+  document.getElementById("letterMore").classList.remove("hidden");
+}
+function leave(){
+  document.getElementById("letterLeave").classList.remove("hidden");
+}
+function angryMove(){
+  let btn=document.getElementById("angryBtn");
+  btn.style.position="absolute";
+  btn.style.top=Math.random()*300+"px";
+  btn.style.left=Math.random()*200+"px";
+  let f=document.getElementById("forgiveBtn");
+  f.style.transform="scale(1.2)";
+}
+function goForgive(){nextScreen(5);}
+let gifts=document.querySelectorAll(".gift");
+let opened=0;
+gifts.forEach(g=>{
+  g.addEventListener("click",()=>{
+    if(!g.classList.contains("opened")){
+      g.classList.add("opened");
+      g.innerText=g.dataset.content;
+      opened++;
+      if(opened===4){
+        document.getElementById("chooseMsg").classList.remove("hidden");
+        gifts.forEach(gg=>{
+          let b=document.createElement("button");
+          b.innerText="Chọn quà này";
+          b.className="btn";
+          b.onclick=()=>selectGift(gg);
+          gg.appendChild(b);
+        });
+      }
+    }
+  });
+});
+function selectGift(g){
+  gifts.forEach(gg=>{if(gg!==g)gg.style.opacity=0.4;});
+  spawnHearts();
+  document.getElementById("chooseMsg").innerHTML="💌 Phần quà sẽ được thực hiện sớm thôi<br>Tha thứ rồi là hong có dận nữa nhaa🌷🥰";
+}
+function spawnHearts(){
+  for(let i=0;i<20;i++){
+    let h=document.createElement("div");
+    h.className="floating-heart";
+    h.innerText="💖";
+    h.style.left=Math.random()*window.innerWidth+"px";
+    h.style.top=Math.random()*window.innerHeight+"px";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),3000);
+  }
+}
+function toggleMusic(){
+  let audio=document.getElementById("bgmusic");
+  if(audio.paused) audio.play(); else audio.pause();
+}
+</script>
+</body>
+</html>
